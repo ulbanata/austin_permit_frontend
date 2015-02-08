@@ -1,0 +1,74 @@
+<html>
+<head>
+  <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
+  <script src='https://code.jquery.com/jquery-1.11.2.min.js'></script>
+
+<style>
+#map {
+    height: 800px;
+    width: 1400px;
+}
+</style>
+
+
+</head>
+
+<body>
+
+
+
+<div id='map'></div>
+<script>
+L.mapbox.accessToken = 'pk.eyJ1IjoiY3Jpc3RpbmFhdHgiLCJhIjoibkdISk5GayJ9.Nkj7iI9zjnYT39wY-UVrhQ';
+var map = L.mapbox.map('map', 'cristinaatx.l56e7f52')
+    //.setView([40, -74.50], 9);
+
+var x = {};
+var y = function(x, data) {
+  x['data'] = JSON.parse(data);
+  console.log(x['data'][0]);
+  console.log(x['data'][0]);
+
+  for (var i = 0; i < x['data'].length; i++) {
+    if(x['data'][i].longitude) {
+      L.mapbox.featureLayer({
+          // this feature is in the GeoJSON format: see geojson.org
+          // for the full specification
+          type: 'Feature',
+          geometry: {
+              type: 'Point',
+              // coordinates here are in longitude, latitude order because
+              // x, y is the standard for GeoJSON and many formats
+              coordinates: [
+                x['data'][i].longitude,
+                x['data'][i].latitude
+              ]
+          },
+          properties: {
+              title: 'Peregrine Espresso',
+              description: '1718 14th St NW, Washington, DC',
+              // one can customize markers by adding simplestyle properties
+              // https://www.mapbox.com/guides/an-open-platform/#simplestyle
+              'marker-size': 'large',
+              'marker-color': '#BE9A6B',
+              'marker-symbol': 'cafe'
+          }
+      }).addTo(map);
+    }
+  }
+}
+
+$.get('http://localhost:4567/api/v1/permits?permit_type=BP&max_results=10000',
+  function(data) {
+    y(x, data)
+  })
+
+
+</script>
+
+
+
+
+</body>
+</html>
