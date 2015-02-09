@@ -2,21 +2,26 @@
 <head>
   <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
   <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
+  <link href='css/map.css' rel='stylesheet' />
   <script src='https://code.jquery.com/jquery-1.11.2.min.js'></script>
 
-<style>
-#map {
-    height: 800px;
-    width: 1400px;
-}
-</style>
 
 
 </head>
 
 <body>
-
-
+<form>
+<label>Search by Zip Code</label>  
+<input id="zip_code" type="text">  
+<label>Total Records</label>  
+<select name="max_result" id="max_result"></select>
+<!-- <input id="max_result" type="text"> -->
+<br>
+<input type="radio" name="status" id="active" value="Active"> Active<br>
+<input type="radio" name="status" id="final" value="Final"> Final<br>
+<br>
+<button type="submit" id="submit"></button>
+</form>
 
 <div id='map'></div>
 <script>
@@ -32,38 +37,93 @@ var y = function(x, data) {
 
   for (var i = 0; i < x['data'].length; i++) {
     if(x['data'][i].longitude) {
-      L.mapbox.featureLayer({
-          // this feature is in the GeoJSON format: see geojson.org
-          // for the full specification
-          type: 'Feature',
-          geometry: {
-              type: 'Point',
-              // coordinates here are in longitude, latitude order because
-              // x, y is the standard for GeoJSON and many formats
-              coordinates: [
-                x['data'][i].longitude,
-                x['data'][i].latitude
-              ]
-          },
-          properties: {
-              title: 'Peregrine Espresso',
-              description: '1718 14th St NW, Washington, DC',
-              // one can customize markers by adding simplestyle properties
-              // https://www.mapbox.com/guides/an-open-platform/#simplestyle
-              'marker-size': 'large',
-              'marker-color': '#BE9A6B',
-              'marker-symbol': 'cafe'
-          }
-      }).addTo(map);
+      if (x['data'][i]['permit_type'] == 'BP') {
+        L.mapbox.featureLayer({
+            // this feature is in the GeoJSON format: see geojson.org
+            // for the full specification
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                // coordinates here are in longitude, latitude order because
+                // x, y is the standard for GeoJSON and many formats
+                coordinates: [
+                  x['data'][i].longitude,
+                  x['data'][i].latitude
+                ]
+            },
+            properties: {
+                title: 'Permit type ' + x['data'][i]['permit_type'],
+                description: x['data'][i]['permit_location'] +' '+ x['data'][i]['zip_code'] ,
+                // one can customize markers by adding simplestyle properties
+                // https://www.mapbox.com/guides/an-open-platform/#simplestyle
+                'marker-size': 'small',
+                'marker-color': '#BE4693',
+                'marker-symbol': 'commercial'
+            }
+        }).addTo(map)}
+        if (x['data'][i]['permit_type'] == 'PP') {
+        L.mapbox.featureLayer({
+            // this feature is in the GeoJSON format: see geojson.org
+            // for the full specification
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                // coordinates here are in longitude, latitude order because
+                // x, y is the standard for GeoJSON and many formats
+                coordinates: [
+                  x['data'][i].longitude,
+                  x['data'][i].latitude
+                ]
+            },
+            properties: {
+                title: 'Permit type ' + x['data'][i]['permit_type'],
+                description: x['data'][i]['permit_location'] +' '+ x['data'][i]['zip_code'] ,
+                // one can customize markers by adding simplestyle properties
+                // https://www.mapbox.com/guides/an-open-platform/#simplestyle
+                'marker-size': 'small',
+                'marker-color': '#7BFF38',
+                'marker-symbol': 'cafe'
+            }
+        }).addTo(map)}
     }
   }
 }
+ var max_result = '';
+    document.getElementById("max_result").addEventListener("change", function() {
+    max_result = this.value;
+});
+ var status = '' 
 
-$.get('http://localhost:4567/api/v1/permits?permit_type=BP&max_results=10000',
-  function(data) {
-    y(x, data)
+
+$(document).ready(function() {
+var select = '';
+for (i=100;i<=1500;i = i+50){
+    select += '<option val=' + i + '>' + i + '</option>';
+}
+$('#max_result').html(select);
+  $('#submit').on('click', function(e){
+    e.preventDefault();
+    status= $("input[name=status]:checked").val() 
+    var url = 'http://localhost:4567/api/v1/permits'
+    var zip_code = $('#zip_code').val()
+
+    console.log(max_result)
+    // if (parseInt(max_result, 10) > 0 && parseInt(zip_code, 10) > 0 ) {
+    //   $.get(url + '?zip_code=' + zip_code + '&max_results=' + max_result,
+    //     function(data) {
+    //      y(x, data)
+    //   })
+    // }
+    if (parseInt(max_result, 10) > 0 && parseInt(zip_code, 10) > 0 && status ) {
+      $.get(url + '?zip_code=' + zip_code +'&status=' + status + '&max_results=' + max_result,
+        function(data) {
+         y(x, data)
+      })
+    }
+
+
   })
-
+})
 
 </script>
 
