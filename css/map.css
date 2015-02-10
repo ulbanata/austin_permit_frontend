@@ -1,4 +1,28 @@
 #map {
-    height:500px;
-    width: 1000px;
+  margin: 0 auto;
+  margin-bottom: 10%;
+  border: 1px solid pink;
 }
+
+
+@media (min-width: 1000px) { 
+    #map { 
+      /*position: absolute;*/
+      height:400px;
+      width: 1000px;
+        }
+    }
+@media (max-width: 600px) { 
+    #map { 
+      /*position: absolute;*/
+      height:400px;
+      width: 600px;
+        }
+    }
+
+ @media (max-width: 600px){
+   #map {
+     height:300px;
+     width: 300px;
+    ;}
+ }  

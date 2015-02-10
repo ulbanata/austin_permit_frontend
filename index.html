@@ -1,15 +1,79 @@
-<html>
-<head>
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Austin Building Permits</title>
+    <meta name="description" content="Bed and Breakfast Castellana Grotte, Monopoli, campagna">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://www.google.com/fonts#UsePlace:use/Collection:Bitter">
+    <link href='http://fonts.googleapis.com/css?family=Playfair+Display:400,900,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Rancho&effect=shadow-multiple|3d-float|emboss|outline">
+    
+   
+    <!-- Foundation CSS -->
+
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/foundation.min.css">
+    
+    <!-- CSS -->
+
+    <link rel="stylesheet" href="css/application.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="js/source/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
+  </head>
+
+ 
   <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
   <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
   <link href='css/map.css' rel='stylesheet' />
   <script src='https://code.jquery.com/jquery-1.11.2.min.js'></script>
 
 
-
-</head>
-
 <body>
+
+  <!-- start nav -->   
+    <div class="off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">   
+        <nav class="tab-bar show-for-medium-only" data-topbar>
+            <section class="left-small">
+              <a class="left-off-canvas-toggle menu-icon"><span></span></a>
+            </section>
+        </nav>
+        <aside class="left-off-canvas-menu">
+          <ul class="off-canvas-list">
+            <li><a href="#">Home</a></li>
+            <li><a href="#maps">Maps</a></li>
+            <li><a href="#search">Search</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </aside>
+        <a class="exit-off-canvas"></a>
+        <!-- top bar -->
+        <div class="fixed">
+          <nav class="top-bar hide-for-medium-only fixed-position" data-topbar>
+            <ul class="title-area">
+              <li class="name bb-icon"> <h1><a href="index.html">ATXPermits</a></h1></li>
+              <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
+            </ul>
+            <section class="top-bar-section">
+              <ul class="right local-nav">
+                <li><a href="#">Home</a></li>
+                <li><a href="#maps">Maps</a></li>
+                <li><a href="search">Search</a></li>
+                <li><a href="about.html"><span>About</span></a></li>    
+              </ul>
+            </section>
+          </nav>
+        </div>  
+        <div id="logo-top"></div>
+
+      <!-- end nav -->
+
+      <header>
+        <h1>Permits</h1>
+      </header>
 <form>
 <label>Search by Zip Code</label>  
 <input id="zip_code" type="text">  
@@ -24,111 +88,115 @@
 </form>
 
 <div id='map'></div>
-<script>
-L.mapbox.accessToken = 'pk.eyJ1IjoiY3Jpc3RpbmFhdHgiLCJhIjoibkdISk5GayJ9.Nkj7iI9zjnYT39wY-UVrhQ';
-var map = L.mapbox.map('map', 'cristinaatx.l56e7f52')
-    //.setView([40, -74.50], 9);
+</div><!-- end inner wrap, must go after ALL content -->
+    </div><!-- end offcanvas -->   
+    
+<!-- JS Foundation-->
+    <script src="js/foundation.js"></script>
+    <script src="js/foundation.topbar.js"></script>
+    <script src="js/foundation.offcanvas.js"></script>
+    <script src="js/foundation.tab.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+    <script>
+    L.mapbox.accessToken = 'pk.eyJ1IjoiY3Jpc3RpbmFhdHgiLCJhIjoibkdISk5GayJ9.Nkj7iI9zjnYT39wY-UVrhQ';
+    var map = L.mapbox.map('map', 'cristinaatx.l56e7f52')
+        //.setView([40, -74.50], 9);
 
-var x = {};
-var y = function(x, data) {
-  x['data'] = JSON.parse(data);
-  console.log(x['data'][0]);
-  console.log(x['data'][0]);
+    var x = {};
+    var y = function(x, data) {
+      x['data'] = JSON.parse(data);
+      console.log(x['data'][0]);
+      console.log(x['data'][0]);
 
-  for (var i = 0; i < x['data'].length; i++) {
-    if(x['data'][i].longitude) {
-      if (x['data'][i]['permit_type'] == 'BP') {
-        L.mapbox.featureLayer({
-            // this feature is in the GeoJSON format: see geojson.org
-            // for the full specification
-            type: 'Feature',
-            geometry: {
-                type: 'Point',
-                // coordinates here are in longitude, latitude order because
-                // x, y is the standard for GeoJSON and many formats
-                coordinates: [
-                  x['data'][i].longitude,
-                  x['data'][i].latitude
-                ]
-            },
-            properties: {
-                title: 'Permit type ' + x['data'][i]['permit_type'],
-                description: x['data'][i]['permit_location'] +' '+ x['data'][i]['zip_code'] ,
-                // one can customize markers by adding simplestyle properties
-                // https://www.mapbox.com/guides/an-open-platform/#simplestyle
-                'marker-size': 'small',
-                'marker-color': '#BE4693',
-                'marker-symbol': 'commercial'
-            }
-        }).addTo(map)}
-        if (x['data'][i]['permit_type'] == 'PP') {
-        L.mapbox.featureLayer({
-            // this feature is in the GeoJSON format: see geojson.org
-            // for the full specification
-            type: 'Feature',
-            geometry: {
-                type: 'Point',
-                // coordinates here are in longitude, latitude order because
-                // x, y is the standard for GeoJSON and many formats
-                coordinates: [
-                  x['data'][i].longitude,
-                  x['data'][i].latitude
-                ]
-            },
-            properties: {
-                title: 'Permit type ' + x['data'][i]['permit_type'],
-                description: x['data'][i]['permit_location'] +' '+ x['data'][i]['zip_code'] ,
-                // one can customize markers by adding simplestyle properties
-                // https://www.mapbox.com/guides/an-open-platform/#simplestyle
-                'marker-size': 'small',
-                'marker-color': '#7BFF38',
-                'marker-symbol': 'cafe'
-            }
-        }).addTo(map)}
+      for (var i = 0; i < x['data'].length; i++) {
+        if(x['data'][i].longitude) {
+          if (x['data'][i]['permit_type'] == 'BP') {
+            L.mapbox.featureLayer({
+                // this feature is in the GeoJSON format: see geojson.org
+                // for the full specification
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    // coordinates here are in longitude, latitude order because
+                    // x, y is the standard for GeoJSON and many formats
+                    coordinates: [
+                      x['data'][i].longitude,
+                      x['data'][i].latitude
+                    ]
+                },
+                properties: {
+                    title: 'Permit type ' + x['data'][i]['permit_type'],
+                    description: x['data'][i]['permit_location'] +' '+ x['data'][i]['zip_code'] ,
+                    // one can customize markers by adding simplestyle properties
+                    // https://www.mapbox.com/guides/an-open-platform/#simplestyle
+                    'marker-size': 'small',
+                    'marker-color': '#BE4693',
+                    'marker-symbol': 'commercial'
+                }
+            }).addTo(map)}
+            if (x['data'][i]['permit_type'] == 'PP') {
+            L.mapbox.featureLayer({
+                // this feature is in the GeoJSON format: see geojson.org
+                // for the full specification
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    // coordinates here are in longitude, latitude order because
+                    // x, y is the standard for GeoJSON and many formats
+                    coordinates: [
+                      x['data'][i].longitude,
+                      x['data'][i].latitude
+                    ]
+                },
+                properties: {
+                    title: 'Permit type ' + x['data'][i]['permit_type'],
+                    description: x['data'][i]['permit_location'] +' '+ x['data'][i]['zip_code'] ,
+                    // one can customize markers by adding simplestyle properties
+                    // https://www.mapbox.com/guides/an-open-platform/#simplestyle
+                    'marker-size': 'small',
+                    'marker-color': '#7BFF38',
+                    'marker-symbol': 'cafe'
+                }
+            }).addTo(map)}
+        }
+      }
     }
-  }
-}
- var max_result = '';
-    document.getElementById("max_result").addEventListener("change", function() {
-    max_result = this.value;
-});
- var status = '' 
+     var max_result = '';
+        document.getElementById("max_result").addEventListener("change", function() {
+        max_result = this.value;
+    });
+     var status = '' 
 
 
-$(document).ready(function() {
-var select = '';
-for (i=100;i<=1500;i = i+50){
-    select += '<option val=' + i + '>' + i + '</option>';
-}
-$('#max_result').html(select);
-  $('#submit').on('click', function(e){
-    e.preventDefault();
-    status= $("input[name=status]:checked").val() 
-    var url = 'http://localhost:4567/api/v1/permits'
-    var zip_code = $('#zip_code').val()
+    $(document).ready(function() {
+    var select = '';
+    for (i=100;i<=1500;i = i+50){
+        select += '<option val=' + i + '>' + i + '</option>';
+    }
+    $('#max_result').html(select);
+      $('#submit').on('click', function(e){
+        e.preventDefault();
+        status= $("input[name=status]:checked").val() 
+        var url = 'http://localhost:4567/api/v1/permits'
+        var zip_code = $('#zip_code').val()
 
-    console.log(max_result)
-    // if (parseInt(max_result, 10) > 0 && parseInt(zip_code, 10) > 0 ) {
-    //   $.get(url + '?zip_code=' + zip_code + '&max_results=' + max_result,
-    //     function(data) {
-    //      y(x, data)
-    //   })
-    // }
-    if (parseInt(max_result, 10) > 0 && parseInt(zip_code, 10) > 0 && status ) {
-      $.get(url + '?zip_code=' + zip_code +'&status=' + status + '&max_results=' + max_result,
-        function(data) {
-         y(x, data)
+        console.log(max_result)
+        // if (parseInt(max_result, 10) > 0 && parseInt(zip_code, 10) > 0 ) {
+        //   $.get(url + '?zip_code=' + zip_code + '&max_results=' + max_result,
+        //     function(data) {
+        //      y(x, data)
+        //   })
+        // }
+        if (parseInt(max_result, 10) > 0 && parseInt(zip_code, 10) > 0 && status ) {
+          $.get(url + '?zip_code=' + zip_code +'&status=' + status + '&max_results=' + max_result,
+            function(data) {
+             y(x, data)
+          })
+        }
       })
-    }
-
-
-  })
-})
-
-</script>
-
-
-
-
-</body>
+    })
+    </script>
+  </body>
 </html>
