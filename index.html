@@ -10,8 +10,7 @@
     <link rel="stylesheet" href="https://www.google.com/fonts#UsePlace:use/Collection:Bitter">
     <link href='http://fonts.googleapis.com/css?family=Playfair+Display:400,900,400italic' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Rancho&effect=shadow-multiple|3d-float|emboss|outline">
-    
-   
+     
     <!-- Foundation CSS -->
 
     <link rel="stylesheet" href="css/normalize.css">
@@ -22,17 +21,16 @@
     <link rel="stylesheet" href="css/application.css">
     <link rel="stylesheet" href="css/nav.css">
     <link rel="stylesheet" href="js/source/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
+    <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
+    <link href='css/map.css' rel='stylesheet' />
+
+    <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
+    <script src='https://code.jquery.com/jquery-1.11.2.min.js'></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="js/popup/jquery.bpopup.min.js"></script>
   </head>
 
- 
-  <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
-  <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
-  <link href='css/map.css' rel='stylesheet' />
-  <script src='https://code.jquery.com/jquery-1.11.2.min.js'></script>
-
-
-<body>
-
+  <body>
   <!-- start nav -->   
     <div class="off-canvas-wrap" data-offcanvas>
       <div class="inner-wrap">   
@@ -46,7 +44,7 @@
             <li><a href="#">Home</a></li>
             <li><a href="#maps">Maps</a></li>
             <li><a href="#search">Search</a></li>
-            <li><a href="about.html">About</a></li>
+            <li id="my-button"><a href="#">About</a></li>
           </ul>
         </aside>
         <a class="exit-off-canvas"></a>
@@ -54,44 +52,69 @@
         <div class="fixed">
           <nav class="top-bar hide-for-medium-only fixed-position" data-topbar>
             <ul class="title-area">
-              <li class="name bb-icon"> <h1><a href="index.html">ATXPermits</a></h1></li>
+              <li class="name bb-icon"> <h1><a href="index.html">AT</a></h1></li>
               <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
             </ul>
             <section class="top-bar-section">
               <ul class="right local-nav">
                 <li><a href="#">Home</a></li>
-                <li><a href="#maps">Maps</a></li>
-                <li><a href="search">Search</a></li>
-                <li><a href="about.html"><span>About</span></a></li>    
+                <li><a href="#results">Results</a></li>
+            <li id="my-button"><a href="#">About</a></li>
               </ul>
             </section>
           </nav>
         </div>  
-        <div id="logo-top"></div>
-
       <!-- end nav -->
 
       <header>
-        <h1>Permits</h1>
+        <h1>Austin Building Permit Data</h1>
       </header>
-<form>
-<label>Search by Zip Code</label>  
-<input id="zip_code" type="text">  
-<label>Total Records</label>  
-<select name="max_result" id="max_result"></select>
-<!-- <input id="max_result" type="text"> -->
-<br>
-<input type="radio" name="status" id="active" value="Active"> Active<br>
-<input type="radio" name="status" id="final" value="Final"> Final<br>
-<br>
-<button type="submit" id="submit"></button>
-</form>
+      <div id="main-form">
+        <form>
+          <label>Search by Zip Code</label> 
+          <input id="zip_code">     
+          <br>
+          <label>Status</label> 
+          <input type="radio" name="status" id="active" value="Active"> Active<br>
+          <input type="radio" name="status" id="final" value="Final"> Final<br>
+          <label for="start_date">From: </label>
+          <input type="date" name="start_date" id="doa" autofocus required>
+          <label for="end_date">To: </label>
+          <input type="date" name="end_date" id="dod" autofocus required>
+          <label for="show_advanced">Show Advanced</label>
+          <input id="show_advanced" type="checkbox">
+          <br>
+          <div id="advanced">
+          <input placeholder="enter job valuation" id="job-valuation">      
+          <br> 
+          <label>Search by Permit Type</label> 
+          <input type="radio" name="type" id="residential" value="residential"> residential<br>
+          <input type="radio" name="type" id="commercial" value="commercial"> commercial<br>
+          
+          <label for="max_result"> </label>
+          <label>Total Records</label>  
+          <select name="max_result" id="max_result"></select>
+          </div>             
+          <input type="submit" name="submit" id="submit" value="Submit">
+        
+        </form>      
 
-<div id='map'></div>
-</div><!-- end inner wrap, must go after ALL content -->
-    </div><!-- end offcanvas -->   
-    
-<!-- JS Foundation-->
+      </div>   
+
+
+      <!-- Element to pop up -->
+      <div id="about_description">
+        <h1>City of Austin Permits</h1>
+        <p>This project is about Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus qui doloribus voluptatum animi veniam sunt adipisci nobis rem, rerum illo consectetur pariatur mollitia perspiciatis harum itaque laborum, molestiae corporis inventore.</p>
+      </div>
+      <div id='map'></div>
+  
+      </div><!-- end inner wrap, must go after ALL content -->
+      </div><!-- end offcanvas -->   
+     <script src="js/main.js"></script>
+     <script src="js/popup/jquery.bpopup.min.js"></script>
+  
+    <!-- JS Foundation-->
     <script src="js/foundation.js"></script>
     <script src="js/foundation.topbar.js"></script>
     <script src="js/foundation.offcanvas.js"></script>
@@ -102,7 +125,7 @@
     <script>
     L.mapbox.accessToken = 'pk.eyJ1IjoiY3Jpc3RpbmFhdHgiLCJhIjoibkdISk5GayJ9.Nkj7iI9zjnYT39wY-UVrhQ';
     var map = L.mapbox.map('map', 'cristinaatx.l56e7f52')
-        //.setView([40, -74.50], 9);
+        .setView([30.2500, -97.7500], 13);
 
     var x = {};
     var y = function(x, data) {
@@ -168,7 +191,7 @@
         max_result = this.value;
     });
      var status = '' 
-
+     var job-valuation = 0;
 
     $(document).ready(function() {
     var select = '';
@@ -179,17 +202,40 @@
       $('#submit').on('click', function(e){
         e.preventDefault();
         status= $("input[name=status]:checked").val() 
+
+        var startDate = new Date($('#doa').val())
+        startDate = startDate.getFullYear() + "/" + (startDate.getMonth() + 1) + "/" + startDate.getDate();
+        var endDate = new Date($('#dod').val());
+        endDate = endDate.getFullYear() + "/" + (endDate.getMonth() + 1) + "/" + endDate.getDate();
+
         var url = 'http://localhost:4567/api/v1/permits'
         var zip_code = $('#zip_code').val()
 
-        console.log(max_result)
+        console.log(startDate)
         // if (parseInt(max_result, 10) > 0 && parseInt(zip_code, 10) > 0 ) {
         //   $.get(url + '?zip_code=' + zip_code + '&max_results=' + max_result,
         //     function(data) {
         //      y(x, data)
         //   })
         // }
-        if (parseInt(max_result, 10) > 0 && parseInt(zip_code, 10) > 0 && status ) {
+
+
+           //if departure date is before arrival date
+        if (startDate > endDate){
+              alert("Please enter a later date for departure!");
+              return false;
+        }
+
+        if (startDate && endDate) {
+            $.get(url + '?zip_code=' + zip_code +'&status=' + status + 
+              '&start_date=' + startDate + '&end_date='+ endDate + '&max_results='+ max_result,
+            function(data) {
+             y(x, data)
+          })
+        }
+     
+
+        else if (parseInt(max_result, 10) > 0 && parseInt(zip_code, 10) > 0 && status ) {
           $.get(url + '?zip_code=' + zip_code +'&status=' + status + '&max_results=' + max_result,
             function(data) {
              y(x, data)
@@ -198,5 +244,32 @@
       })
     })
     </script>
+    <script>
+      $(document).ready(function() {
+        $(document).foundation();
+
+    })
+    </script>
+    <script>
+    ;(function($) {
+ 
+ // DOM Ready
+$(function() {
+ 
+// Binding a click event
+// From jQuery v.1.7.0 use .on() instead of .bind()
+$('li#my-button').bind('click', function(e) {
+ 
+// Prevents the default action to be triggered. 
+e.preventDefault();
+ 
+// Triggering bPopup when click event is fired
+$('#about_description').bPopup();
+ 
+});
+ 
+});
+ 
+})(jQuery);</script>
   </body>
 </html>
