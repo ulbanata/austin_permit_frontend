@@ -31,6 +31,11 @@
   </head>
 
   <body>
+
+<nav id='menu-ui' class='menu-ui'>
+  <a href='#' class='active' id='filter-all'>All permits</a>
+  <a href='#' id='filter-commercial'>Commercial permits</a>
+</nav>
   <!-- start nav -->   
     <div class="off-canvas-wrap" data-offcanvas>
       <div class="inner-wrap">   
@@ -42,8 +47,7 @@
         <aside class="left-off-canvas-menu">
           <ul class="off-canvas-list">
             <li><a href="#">Home</a></li>
-            <li><a href="#maps">Maps</a></li>
-            <li><a href="#search">Search</a></li>
+            <li id="#search"><a href="#">Search</a></li>
             <li id="my-button"><a href="#">About</a></li>
           </ul>
         </aside>
@@ -52,29 +56,44 @@
         <div class="fixed">
           <nav class="top-bar hide-for-medium-only fixed-position" data-topbar>
             <ul class="title-area">
-              <li class="name bb-icon"> <h1><a href="index.html">AT</a></h1></li>
+              <li class="name bb-icon"><h1><a href="index.html">Permits Finder</a></h1></li>
               <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
             </ul>
             <section class="top-bar-section">
               <ul class="right local-nav">
                 <li><a href="#">Home</a></li>
-                <li><a href="#results">Results</a></li>
-            <li id="my-button"><a href="#">About</a></li>
+                <li id="search"><a href="#">Search</a></li>
+                <li id="my-button"><a href="#">About</a></li>
               </ul>
             </section>
           </nav>
         </div>  
       <!-- end nav -->
 
-      <header>
+     <!--  <header>
         <h1>Austin Building Permit Data</h1>
-      </header>
+        <div class="tagline">
+          <h4>Interactive Search of Austin Building Permits</h4>
+        </div>
+      </header> -->
+
+     
+
+      <!-- Element to pop up -->
+      <div id="about_description">
+        <h1>City of Austin Permits</h1>
+        <p>This project is about Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus qui doloribus voluptatum animi veniam sunt adipisci nobis rem, rerum illo consectetur pariatur mollitia perspiciatis harum itaque laborum, molestiae corporis inventore.</p>
+      </div>
+      <div class="main cf">
+      <div id='map'></div>
+      <nav id='menu-ui' class='menu-ui'>
+        <a href='#' class='active' id='all'>All permits</a>
+        <a href='#' id='commercial'>Commercial permits</a>
+      </nav>
       <div id="main-form">
         <form>
-          <label>Search by Zip Code</label> 
-          <input id="zip_code">     
-          <br>
-          <label>Status</label> 
+          <label>Zip Code  <input placeholder=" zip code" id="zip_code" required></label> 
+          <br><label>Status</label> 
           <input type="radio" name="status" id="active" value="Active"> Active<br>
           <input type="radio" name="status" id="final" value="Final"> Final<br>
           <label for="start_date">From: </label>
@@ -95,24 +114,15 @@
           <label>Total Records</label>  
           <select name="max_result" id="max_result"></select>
           </div>             
-          <input type="submit" name="submit" id="submit" value="Submit">
-        
+          <input type="submit" name="submit" id="submit" value="Submit">       
         </form>      
-
       </div>   
-
-
-      <!-- Element to pop up -->
-      <div id="about_description">
-        <h1>City of Austin Permits</h1>
-        <p>This project is about Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus qui doloribus voluptatum animi veniam sunt adipisci nobis rem, rerum illo consectetur pariatur mollitia perspiciatis harum itaque laborum, molestiae corporis inventore.</p>
-      </div>
-      <div id='map'></div>
+</div>
   
-      </div><!-- end inner wrap, must go after ALL content -->
-      </div><!-- end offcanvas -->   
-     <script src="js/main.js"></script>
-     <script src="js/popup/jquery.bpopup.min.js"></script>
+    </div><!-- end inner wrap, must go after ALL content -->
+    </div><!-- end offcanvas -->   
+    <script src="js/main.js"></script>
+    <script src="js/popup/jquery.bpopup.min.js"></script>
   
     <!-- JS Foundation-->
     <script src="js/foundation.js"></script>
@@ -123,16 +133,14 @@
       $(document).foundation();
     </script>
     <script>
-    L.mapbox.accessToken = 'pk.eyJ1IjoiY3Jpc3RpbmFhdHgiLCJhIjoibkdISk5GayJ9.Nkj7iI9zjnYT39wY-UVrhQ';
-    var map = L.mapbox.map('map', 'cristinaatx.l56e7f52')
-        .setView([30.2500, -97.7500], 13);
+      L.mapbox.accessToken = 'pk.eyJ1IjoiY3Jpc3RpbmFhdHgiLCJhIjoibkdISk5GayJ9.Nkj7iI9zjnYT39wY-UVrhQ';
+    var map = L.mapbox.map('map', 'cristinaatx.l56e7f52');
 
     var x = {};
     var y = function(x, data) {
       x['data'] = JSON.parse(data);
       console.log(x['data'][0]);
       console.log(x['data'][0]);
-
       for (var i = 0; i < x['data'].length; i++) {
         if(x['data'][i].longitude) {
           if (x['data'][i]['permit_type'] == 'BP') {
@@ -150,50 +158,77 @@
                     ]
                 },
                 properties: {
-                    title: 'Permit type ' + x['data'][i]['permit_type'],
-                    description: x['data'][i]['permit_location'] +' '+ x['data'][i]['zip_code'] ,
+                    title: x['data'][i]['permit_class'] + ' permit',
+                    description: 'Description: ' + x['data'][i]['work_description'] + ' ' + 'Address: ' + x['data'][i]['permit_location'] +' '+ x['data'][i]['zip_code'] ,
                     // one can customize markers by adding simplestyle properties
                     // https://www.mapbox.com/guides/an-open-platform/#simplestyle
                     'marker-size': 'small',
                     'marker-color': '#BE4693',
                     'marker-symbol': 'commercial'
                 }
-            }).addTo(map)}
-            if (x['data'][i]['permit_type'] == 'PP') {
+            }).addTo(map)
+          }
+
+          if (x['data'][i]['permit_type'] == 'PP') {
             L.mapbox.featureLayer({
-                // this feature is in the GeoJSON format: see geojson.org
-                // for the full specification
-                type: 'Feature',
-                geometry: {
-                    type: 'Point',
-                    // coordinates here are in longitude, latitude order because
-                    // x, y is the standard for GeoJSON and many formats
-                    coordinates: [
-                      x['data'][i].longitude,
-                      x['data'][i].latitude
-                    ]
-                },
-                properties: {
-                    title: 'Permit type ' + x['data'][i]['permit_type'],
-                    description: x['data'][i]['permit_location'] +' '+ x['data'][i]['zip_code'] ,
-                    // one can customize markers by adding simplestyle properties
-                    // https://www.mapbox.com/guides/an-open-platform/#simplestyle
-                    'marker-size': 'small',
-                    'marker-color': '#7BFF38',
-                    'marker-symbol': 'cafe'
-                }
-            }).addTo(map)}
-        }
+              // this feature is in the GeoJSON format: see geojson.org
+              // for the full specification
+              type: 'Feature',
+              geometry: {
+                  type: 'Point',
+                  // coordinates here are in longitude, latitude order because
+                  // x, y is the standard for GeoJSON and many formats
+                  coordinates: [
+                    x['data'][i].longitude,
+                    x['data'][i].latitude
+                  ]
+              },
+              properties: {
+                 title: x['data'][i]['permit_class'] + ' Permit',
+                  description: 'Description: ' + x['data'][i]['work_description'] + ' ' + 'Address: ' + x['data'][i]['permit_location'] +' '+ x['data'][i]['zip_code'],
+                  // one can customize markers by adding simplestyle properties
+                  // https://www.mapbox.com/guides/an-open-platform/#simplestyle
+                  'marker-size': 'small',
+                  'marker-color': '#FF1B3C',
+                  'marker-symbol': 'village'
+              }
+          }).addTo(map)
+        }       
       }
     }
-     var max_result = '';
-        document.getElementById("max_result").addEventListener("change", function() {
-        max_result = this.value;
-    });
-     var status = '' 
-     var job-valuation = 0;
-
+  }
+  var max_result = '';
+    document.getElementById("max_result").addEventListener("change", function() {
+    max_result = this.value;
+  });
+  var status = '';
+  // var job-valuation = 0;
+     
     $(document).ready(function() {
+
+    $("#main-form").hide();
+    function showCommercial(f) {  
+      $('a#commercial').on('click',  function(e) {
+        $('a#all').removeClass('active');
+        $(this).addClass('active');
+        // The setFilter function takes a GeoJSON feature object
+        // and returns true to show it or false to hide it
+        return f.properties['marker-symbol'] === 'commercial'
+    });
+    }
+      
+
+    // $('a#all').on('click', function(e) {
+    //     $('a#commercial').removeClass('active');
+    //      $(this).addClass('active');
+    //     map.featureLayer.setFilter(function(f) {
+    //         // Returning true for all markers shows everything.
+    //         return true;
+    //     });
+    //     return false;
+    // });
+   
+       
     var select = '';
     for (i=100;i<=1500;i = i+50){
         select += '<option val=' + i + '>' + i + '</option>';
@@ -201,6 +236,7 @@
     $('#max_result').html(select);
       $('#submit').on('click', function(e){
         e.preventDefault();
+
         status= $("input[name=status]:checked").val() 
 
         var startDate = new Date($('#doa').val())
@@ -220,19 +256,29 @@
         // }
 
 
-           //if departure date is before arrival date
+           //if departure date is before arrival date   
         if (startDate > endDate){
-              alert("Please enter a later date for departure!");
+              alert("Please enter a later date!");
               return false;
         }
 
-        if (startDate && endDate) {
+        if (startDate && endDate ) {
+
+          if (max_result) {
             $.get(url + '?zip_code=' + zip_code +'&status=' + status + 
-              '&start_date=' + startDate + '&end_date='+ endDate + '&max_results='+ max_result,
+              '&start_date=' + startDate + '&end_date='+ endDate + '&max_results=' + parseInt(max_result, 10),
             function(data) {
              y(x, data)
           })
         }
+        else {
+          $.get(url + '?zip_code=' + zip_code +'&status=' + status + 
+              '&start_date=' + startDate + '&end_date='+ endDate + '&max_results= 100',
+            function(data) {
+             y(x, data)
+          })
+        }
+      }
      
 
         else if (parseInt(max_result, 10) > 0 && parseInt(zip_code, 10) > 0 && status ) {
@@ -242,7 +288,14 @@
           })
         }
       })
+    $(function() {
+     $('li#search').on('click', function(e){
+        e.preventDefault();
+        console.log("ciao");
+        $("#main-form").toggle();
+      }); 
     })
+  })  
     </script>
     <script>
       $(document).ready(function() {
@@ -255,15 +308,14 @@
  
  // DOM Ready
 $(function() {
- 
-// Binding a click event
+// Binding a click permit
 // From jQuery v.1.7.0 use .on() instead of .bind()
 $('li#my-button').bind('click', function(e) {
  
-// Prevents the default action to be triggered. 
+// Prpermits the default action to be triggered. 
 e.preventDefault();
  
-// Triggering bPopup when click event is fired
+// Triggering bPopup when click permit is fired
 $('#about_description').bPopup();
  
 });

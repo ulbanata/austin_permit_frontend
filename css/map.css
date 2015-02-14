@@ -1,28 +1,32 @@
 #map {
-  margin: 0 auto;
+  /*margin: 0 auto;
   margin-bottom: 10%;
+  margin-top: 5%;
+  /*margin-left: 2%;*/*/
+  position:absolute; top:0; bottom:0; width:100%; 
+  /*float: left;*/
   border: 1px solid pink;
 }
 
 
 @media (min-width: 1000px) { 
     #map { 
-      /*position: absolute;*/
+      position: absolute;
       height:1000px;
-      width: 1200px;
+      /*width: 70%;*/
         }
     }
 @media (max-width: 600px) { 
     #map { 
-      /*position: absolute;*/
-      height:400px;
-      width: 600px;
+      position: absolute;
+      height:1000px;
+      width: 70%;
         }
     }
 
  @media (max-width: 600px){
    #map {
-     height:300px;
-     width: 300px;
+     height:600px;
+     width: 70%;
     ;}
  }  
