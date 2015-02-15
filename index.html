@@ -65,10 +65,8 @@
                 </section>
               </nav>
             </div>  
-          <!-- end nav -->
-
-    
-   <!-- Element to pop up -->
+          <!-- end nav -->    
+          <!-- Element to pop up -->
             <div id="about_description">
               <h1>City of Austin Permits</h1>
               <p>This project is about Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus qui doloribus voluptatum animi veniam sunt adipisci nobis rem, rerum illo consectetur pariatur mollitia perspiciatis harum itaque laborum, molestiae corporis inventore.</p>
@@ -87,7 +85,7 @@
                 <br>
                 <label>Status
                 </label> 
-                <input type="radio" name="status" id="active" value="Active"> Active<br>
+                <input type="radio" name="status" id="active" value="Active" checked> Active<br>
                 <input type="radio" name="status" id="final" value="Final"> Final<br>
                 <label for="start_date">From: 
                 </label>
@@ -104,8 +102,8 @@
                 <br> 
                 <label>Search by Permit Type
                 </label> 
-                <input type="radio" name="type" id="residential" value="residential"> residential<br>
-                <input type="radio" name="type" id="commercial" value="commercial"> commercial
+                <input type="checkbox" name="type" id="residential" value="residential"> residential<br>
+                <input type="checkbox" name="type" id="commercial" value="commercial"> commercial
                 <br>         
                 <label for="max_result"> 
                 </label>
@@ -186,20 +184,29 @@
                         // https://www.mapbox.com/guides/an-open-platform/#simplestyle
                         'marker-size': 'small',
                         'marker-color': '#FF1B3C',
-                          'marker-symbol': 'village'
+                        'marker-symbol': 'village'
                       }
                   }).addTo(map)
                 }       
               }
             }
           }
-
           var max_result = '';
             document.getElementById("max_result").addEventListener("change", function() {
             max_result = this.value;
           });
           var status = '';
-          // var job-valuation = 0;
+           // var job_valuation = '';
+          var permit_residential = "";
+          var permit_commercial = "";
+          document.getElementById("job_valuation").addEventListener("change", function() {
+          job_valuation = this.value;
+          })
+          document.getElementById("residential").addEventListener("change", function() {
+          permit_residential = this.value;})
+          document.getElementById("commercial").addEventListener("change", function() {
+          permit_commercial = this.value;})
+
              
           $(document).ready(function() {
             $("#main-form").hide();
@@ -212,7 +219,6 @@
                 return f.properties['marker-symbol'] === 'commercial'
             });
           } 
-
           var select = '';
           for (i=100;i<=1500;i = i+50){
             select += '<option val=' + i + '>' + i + '</option>';
@@ -229,12 +235,6 @@
               var url = 'http://localhost:4567/api/v1/permits'
               var zip_code = $('#zip_code').val()
 
-              // if (parseInt(max_result, 10) > 0 && parseInt(zip_code, 10) > 0 ) {
-              //   $.get(url + '?zip_code=' + zip_code + '&max_results=' + max_result,
-              //     function(data) {
-              //      y(x, data)
-              //   })
-              // }
               if (startDate > endDate){
                 alert("Please enter a later date!");
                 return false;
