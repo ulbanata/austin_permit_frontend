@@ -56,7 +56,7 @@
         <div class="fixed">
           <nav class="top-bar hide-for-medium-only fixed-position" data-topbar>
             <ul class="title-area">
-              <li class="name bb-icon"><h1><a href="index.html">Permits Finder</a></h1></li>
+              <li class="name bb-icon"><h1><a href="index.html">Permit Finder</a></h1></li>
               <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
             </ul>
             <section class="top-bar-section">
@@ -143,7 +143,7 @@
       console.log(x['data'][0]);
       for (var i = 0; i < x['data'].length; i++) {
         if(x['data'][i].longitude) {
-          if (x['data'][i]['permit_type'] == 'BP') {
+          if (x['data'][i]['permit_class'] == 'Commercial') {
             L.mapbox.featureLayer({
                 // this feature is in the GeoJSON format: see geojson.org
                 // for the full specification
@@ -169,7 +169,7 @@
             }).addTo(map)
           }
 
-          if (x['data'][i]['permit_type'] == 'PP') {
+          if (x['data'][i]['permit_class'] == 'Residential') {
             L.mapbox.featureLayer({
               // this feature is in the GeoJSON format: see geojson.org
               // for the full specification
